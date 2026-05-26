@@ -1,0 +1,32 @@
+{
+  "name": "BabiCare AI - Trợ lý Mẹ Bầu",
+  "short_name": "BabiCare AI",
+  "description": "Ứng tâm chăm sóc mẹ bầu, tính ngày dự sinh, đếm ngược sinh nở và chỉ số phát triển thai nhi thông minh.",
+  "start_url": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "orientation": "any",
+  "background_color": "#FFF1F2",
+  "theme_color": "#FFF1F2",
+  "dir": "ltr",
+  "lang": "vi-VN",
+  "categories": ["medical", "health"],
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

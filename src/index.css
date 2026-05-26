@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+/* Hệ thống responsive font-scale toàn diện dùng clamp() & media queries */
+html {
+  font-size: clamp(14px, 1rem + 0.2vw, 18px) !important;
+}
+
+@media (max-width: 640px) {
+  html {
+    font-size: 14px !important; /* Chữ vừa vặn cực nét, không bị quá to trên mobile */
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  html {
+    font-size: 15px !important; /* Chữ sắc sảo tối ưu thích hợp cho iPad/tablet */
+  }
+}
+
+@media (min-width: 1025px) {
+  html {
+    font-size: 16.5px !important; /* Chữ hiển thị cân đối và rõ nét trên máy tính để bàn (Desktop) */
+  }
+}
+
+/* Cố định toàn bộ màn hình hiển thị nội dung không thu phóng */
+html, body {
+  touch-action: pan-x pan-y;
+  user-select: none;
+  overflow: hidden; /* Cấm cuộn dọc mức trình duyệt ngoài để cố định khung giao diện */
+  height: 100%;
+  width: 100%;
+}
+
+/* Đảm bảo các ô nhập liệu không kích hoạt tự phóng to (auto-zoom) đặc biệt khi gõ trên thiết bị di động */
+@media screen and (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
