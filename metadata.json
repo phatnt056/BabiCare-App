@@ -1,0 +1,6 @@
+{
+  "name": "BabiCare AI",
+  "description": "Trợ lý sức khỏe thai kỳ toàn diện hỗ trợ đính ngày dự sinh, đếm ngược ngày sinh, cung cấp cẩm nang và phân tích chỉ số siêu âm thông minh.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

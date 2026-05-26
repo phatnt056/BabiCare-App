@@ -1,0 +1,75 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. Global safety net - Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Core helper definitions ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isAdmin() {
+      return isVerifiedUser() && (
+        request.auth.token.email == "suacauba@gmail.com" ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isOwner(userId) {
+      return isVerifiedUser() && request.auth.uid == userId;
+    }
+
+    // Path Variable Hardening (ID Poisoning Guard)
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // --- Entity Collections ---
+
+    // Collection: Users (Individual personal data including menstrual logs, weight history, etc.)
+    match /users/{userId} {
+      allow get: if isValidId(userId) && (isOwner(userId) || isAdmin());
+      // Query Enforcer Check for Listing Users (only allows requesting own profile data)
+      allow list: if isVerifiedUser() && (resource.data.uid == request.auth.uid || isAdmin());
+      
+      // Strict keys check on creation to prevent Ghost/Shadow fields
+      allow create: if isValidId(userId) && isOwner(userId) && (
+        request.resource.data.uid == userId &&
+        request.resource.data.email == request.auth.token.email &&
+        request.resource.data.keys().hasAll(['uid', 'email'])
+      );
+      
+      // Strict keys check on updates to preserve identity integrity
+      allow update: if isValidId(userId) && (
+        (isOwner(userId) && 
+         request.resource.data.uid == userId &&
+         request.resource.data.email == existing().email) 
+        || isAdmin()
+      );
+      
+      allow delete: if isValidId(userId) && isAdmin();
+    }
+
+    // Collection: AppSettings (Global configuration parameters managed purely by Admin)
+    match /appSettings/{settingId} {
+      allow get: if isValidId(settingId);
+      allow list: if true;
+      allow write: if isValidId(settingId) && isAdmin();
+    }
+
+    // Collection: RecommendedProducts (Affiliate products list curated purely by Admin)
+    match /recommendedProducts/{productId} {
+      allow get: if isValidId(productId);
+      allow list: if true;
+      allow write: if isValidId(productId) && isAdmin();
+    }
+  }
+}

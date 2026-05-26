@@ -1,0 +1,75 @@
+{
+  "entities": {
+    "User": {
+      "title": "UserProfile",
+      "description": "User profile, state, and tracking metrics for pregnant mothers",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["user", "admin"] },
+        "phase": { "type": "string", "enum": ["prepreg", "pregnancy"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "motherAge": { "type": "string" },
+        "weightBefore": { "type": "string" },
+        "heightBefore": { "type": "string" },
+        "notes": { "type": "string" },
+        "lastPeriodDate": { "type": "string" },
+        "doctorDueDate": { "type": "string" },
+        "method": { "type": "string" },
+        "maternalWeeklyWeights": { "type": "object" },
+        "prePregChecklist": { "type": "object" },
+        "babyNotes": { "type": "object" },
+        "menstrualLogs": { "type": "array" },
+        "ultrasoundInputs": { "type": "object" }
+      },
+      "required": ["uid", "email"]
+    },
+    "AppSetting": {
+      "title": "AppSetting",
+      "description": "Custom texts configured dynamically by admin to change the text content",
+      "type": "object",
+      "properties": {
+        "homepageTitle": { "type": "string" },
+        "homepageSubtitle": { "type": "string" },
+        "welcomeMessage": { "type": "string" },
+        "handbookHeader": { "type": "string" },
+        "customAlert": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "updatedBy": { "type": "string" }
+      }
+    },
+    "RecommendedProduct": {
+      "title": "RecommendedProduct",
+      "description": "Recommended affiliate pregnancy products added and managed by admin",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "affiliateUrl": { "type": "string" },
+        "price": { "type": "string" },
+        "category": { "type": "string", "enum": ["vitamin", "stretch_mark", "food_drink"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "imageUrl", "affiliateUrl", "price", "category"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Individually secured document for each user containing profile and track records"
+    },
+    "/appSettings/{settingId}": {
+      "schema": "AppSetting",
+      "description": "Global application setting configs writable only by admin and readable by everyone"
+    },
+    "/recommendedProducts/{productId}": {
+      "schema": "RecommendedProduct",
+      "description": "List of pregnancy products readable by all moms, but managed/edited/added purely by admin"
+    }
+  }
+}
